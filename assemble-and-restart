@@ -78,6 +78,13 @@ if [ -n "$ODO_S2I_DEPLOYMENT_DIR" ]; then
 fi
 ####
 
-# Restart supervisord in order to actualy run the application
-# This is a dumb way to start as supervisord does not have a restart function
-/var/lib/supervisord/bin/supervisord ctl stop run; /var/lib/supervisord/bin/supervisord ctl start run
+# Current state of the run program
+RUN_STATE=$(/var/lib/supervisord/bin/supervisord ctl status run | awk '{print $2}')
+
+# Skip restart if are not in dev mode (no hot reload),
+# but try to restart service if it is not in RUNNING state
+if [ "$DEV_MODE" != "true" ] || [ "$RUN_STATE" != "RUNNING" ]; then
+    # Restart supervisord in order to actualy run the application
+    # This is a dumb way to start as supervisord does not have a restart function
+    /var/lib/supervisord/bin/supervisord ctl stop run; /var/lib/supervisord/bin/supervisord ctl start run
+fi
