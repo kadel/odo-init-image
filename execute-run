@@ -6,8 +6,8 @@ set -eo pipefail
 echo "Running"
 # We now run the run script. If there is a custom one written in the
 # source files, we use that instead.
-if [ -f ${ODO_S2I_SRC_BIN_PATH}/.s2i/bin/run ]; then
-    exec ${ODO_S2I_SRC_BIN_PATH}/.s2i/bin/run
+if [ -f ${ODO_S2I_DESTINATION_PATH}/.s2i/bin/run ]; then
+    exec ${ODO_S2I_DESTINATION_PATH}/.s2i/bin/run
 elif [ -f ${ODO_S2I_SCRIPTS_URL}/run ]; then # java s2i
     exec ${ODO_S2I_SCRIPTS_URL}/run
 else
