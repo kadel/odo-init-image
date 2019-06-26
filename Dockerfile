@@ -19,6 +19,7 @@ RUN chmod +x /usr/bin/fix-permissions
 ADD https://github.com/ochinchina/supervisord/releases/download/v0.5/supervisord_0.5_linux_amd64 ${SUPERVISORD_DIR}/bin/supervisord
 
 ADD execute-run ${SUPERVISORD_DIR}/bin
+ADD execute-refresh ${SUPERVISORD_DIR}/bin
 
 RUN chgrp -R 0 ${SUPERVISORD_DIR}  && \
     chmod -R g+rwX ${SUPERVISORD_DIR} && \

@@ -1,0 +1,15 @@
+#!/bin/bash
+set -x
+set -eo pipefail
+
+
+echo "Refreshing"
+# If there is a custom one written in the
+# source files, we use that instead.
+if [ -f ${ODO_S2I_DESTINATION_PATH}/.s2i/bin/refresh ]; then
+    exec ${ODO_S2I_DESTINATION_PATH}/.s2i/bin/refresh
+elif [ -f ${ODO_S2I_SCRIPTS_URL}/refresh ]; then # java s2i
+    exec ${ODO_S2I_SCRIPTS_URL}/refresh
+else
+    exec /usr/libexec/s2i/refresh
+fi
