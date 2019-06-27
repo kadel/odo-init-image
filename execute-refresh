@@ -4,17 +4,17 @@ set -eo pipefail
 
 
 echo "Refreshing"
-# If there is a custom one written in the
-# source files, we use that instead.
+# If there is a custom one written in the source files, we use that instead.
 if [ -f ${ODO_S2I_DESTINATION_PATH}/.s2i/bin/refresh ]; then
-    exec ${ODO_S2I_DESTINATION_PATH}/.s2i/bin/refresh
+    ${ODO_S2I_DESTINATION_PATH}/.s2i/bin/refresh
 elif [ -f ${ODO_S2I_SCRIPTS_URL}/refresh ]; then # java s2i
-    exec ${ODO_S2I_SCRIPTS_URL}/refresh
+    ${ODO_S2I_SCRIPTS_URL}/refresh
 else
-    exec /usr/libexec/s2i/refresh
+    /usr/libexec/s2i/refresh
 fi
 
-
-# make sure that supervisor service is set to autostart
-sed  -i "s/autostart=false/autostart=true/" /var/lib/supervisord/conf/supervisor.conf
-/var/lib/supervisord/bin/supervisord ctl start run
+# by default the autostart is false, to prevent errors before fist code is pushed
+if grep  -q "autostart=false" /var/lib/supervisord/conf/supervisor.conf; then
+    sed  -i "s/autostart=false/autostart=true/" /var/lib/supervisord/conf/supervisor.conf
+    /var/lib/supervisord/bin/supervisord ctl start run
+fi
