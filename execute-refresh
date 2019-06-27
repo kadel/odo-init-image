@@ -5,7 +5,9 @@ set -eo pipefail
 
 echo "Refreshing"
 # If there is a custom one written in the source files, we use that instead.
-if [ -f ${ODO_S2I_DESTINATION_PATH}/.s2i/bin/refresh ]; then
+if [ -f ${ODO_S2I_DEV_MODE_SOURCE_DIR}/.s2i/bin/refresh ]; then
+    ${ODO_S2I_DEV_MODE_SOURCE_DIR}/.s2i/bin/refresh
+elif [ -f ${ODO_S2I_DESTINATION_PATH}/.s2i/bin/refresh ]; then
     ${ODO_S2I_DESTINATION_PATH}/.s2i/bin/refresh
 elif [ -f ${ODO_S2I_SCRIPTS_URL}/refresh ]; then # java s2i
     ${ODO_S2I_SCRIPTS_URL}/refresh
