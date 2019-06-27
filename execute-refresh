@@ -13,3 +13,8 @@ elif [ -f ${ODO_S2I_SCRIPTS_URL}/refresh ]; then # java s2i
 else
     exec /usr/libexec/s2i/refresh
 fi
+
+
+# make sure that supervisor service is set to autostart
+sed  -i "s/autostart=false/autostart=true/" /var/lib/supervisord/conf/supervisor.conf
+/var/lib/supervisord/bin/supervisord ctl start run
