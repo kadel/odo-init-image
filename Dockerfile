@@ -3,6 +3,14 @@
 # in order to appropriately inject the supervisord binary into the application container.
 #
 
+FROM openshift/origin-release:golang-1.12 AS gobuilder
+
+RUN mkdir -p /go/src/github.com/openshift/odo-supervisord-image/
+ADD . /go/src/github.com/openshift/odo-supervisord-image/
+WORKDIR /go/src/github.com/openshift/odo-supervisord-image/
+RUN go build getlanguage.go
+
+
 FROM registry.access.redhat.com/ubi7/ubi
 
 ENV SUPERVISORD_DIR /opt/supervisord
@@ -19,11 +27,14 @@ RUN chmod +x /usr/bin/fix-permissions
 ADD https://github.com/ochinchina/supervisord/releases/download/v0.5/supervisord_0.5_linux_amd64 ${SUPERVISORD_DIR}/bin/supervisord
 
 ADD assemble-and-restart ${SUPERVISORD_DIR}/bin
-# ADD assemble ${SUPERVISORD_DIR}/bin
-# RUN ${SUPERVISORD_DIR}/bin/assemble
 ADD run ${SUPERVISORD_DIR}/bin
 ADD s2i-setup ${SUPERVISORD_DIR}/bin
 ADD setup-and-run ${SUPERVISORD_DIR}/bin
+
+COPY --from=gobuilder /go/src/github.com/openshift/odo-supervisord-image/getlanguage ${SUPERVISORD_DIR}/bin
+
+
+ADD language-scripts ${SUPERVISORD_DIR}/language-scripts/
 
 RUN chgrp -R 0 ${SUPERVISORD_DIR}  && \
     chmod -R g+rwX ${SUPERVISORD_DIR} && \
