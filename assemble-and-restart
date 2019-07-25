@@ -9,7 +9,10 @@ IMAGE_LANG=`${ODO_SUPERVISORD_DIR}/bin/getlanguage`
 
 if [ ! -z "${IMAGE_LANG}" ]; then
     ${ODO_SUPERVISORD_DIR}/language-scripts/${IMAGE_LANG}/dev-assemble
-    ${ODO_SUPERVISORD_DIR}/bin/supervisord ctl stop run; ${ODO_SUPERVISORD_DIR}/bin/supervisord ctl start run
+    if [ "$IMAGE_LANG" == "nodejs" ]; then
+        #nodejs scripts have hotreload support, just make sure that it is running
+        ${ODO_SUPERVISORD_DIR}/bin/supervisord ctl start run
+    fi
     exit
 fi
 
