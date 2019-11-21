@@ -38,6 +38,7 @@ ENV ODO_TOOLS_DIR /opt/odo-init/
 # SupervisorD
 RUN mkdir -p ${ODO_TOOLS_DIR}/conf ${ODO_TOOLS_DIR}/bin
 COPY supervisor.conf ${ODO_TOOLS_DIR}/conf/
+COPY supervisor-devfile.conf ${ODO_TOOLS_DIR}/conf/
 COPY --from=gobuilder /tmp/supervisord ${ODO_TOOLS_DIR}/bin/supervisord
 
 # Wrapper scripts
@@ -45,6 +46,7 @@ COPY assemble-and-restart ${ODO_TOOLS_DIR}/bin
 COPY run ${ODO_TOOLS_DIR}/bin
 COPY s2i-setup ${ODO_TOOLS_DIR}/bin
 COPY setup-and-run ${ODO_TOOLS_DIR}/bin
+COPY devfile-run-command.sh ${ODO_TOOLS_DIR}/bin
 COPY vendor/fix-permissions  /usr/bin/fix-permissions
 COPY language-scripts ${ODO_TOOLS_DIR}/language-scripts/
 
